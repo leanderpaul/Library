@@ -1,0 +1,99 @@
+.landingImage {
+    margin-top: -500px;
+}
+
+.heading {
+    letter-spacing: 10px;
+}
+
+.cover {
+    cursor: pointer;
+    height: 300px;
+    min-width: 200px;
+    border: 1px dashed grey;
+    border-radius: 5px;
+}
+
+.cover-image img {
+    max-height: 300px;
+}
+
+.cover-upload:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+}
+
+.upload-icon {
+    font-size: 40px;
+}
+
+.logs {
+    height: 400px;
+    overflow: auto;
+    background-color: #eeeeee;
+}
+
+html,
+body,
+#root,
+.App
+#body {
+    min-height: 876px;
+}
+
+#body {
+    margin-top: 50px;
+    min-height: 100%;
+}
+
+.search-bar {
+    margin-top: 100px;
+}
+
+.search-btn {
+    width: 200px;
+    border-radius: 50px;
+}
+
+.search-text {
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 3px;
+}
+
+.card {
+    cursor: pointer;
+}
+
+.card:hover {
+    box-shadow: 1px 1px 7px 7px #dddddd;
+}
+
+.book-detail {
+    font-size: 20px;
+    margin: 5px 0px;
+}
+
+select {
+    width: 400px;
+}
+
+.filter-icon {
+    top: 100px;
+    right: 100px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.delete-icon {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    color: #f1d2d2;
+}
+
+.delete-icon:hover {
+    color: #ff0000;
+}

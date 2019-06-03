@@ -1,0 +1,2 @@
+export const SET_FEEDBACK = 'SET_FEEDBACK';
+export const SET_CURRENT_USER = 'SET_CURRENT_USER';

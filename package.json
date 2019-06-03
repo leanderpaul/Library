@@ -1,0 +1,42 @@
+{
+  "name": "librarymanagementsystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "client": "npm start --prefix client",
+    "data": "node ./lib/testDataGenerator.js",
+    "dev": "concurrently \"npm run client\" \"nodemon server.js\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leanderpaul/LibraryManagementSystem.git"
+  },
+  "author": "Shadow Lord",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leanderpaul/LibraryManagementSystem/issues"
+  },
+  "homepage": "https://github.com/leanderpaul/LibraryManagementSystem#readme",
+  "dependencies": {
+    "event-stream": "^4.0.1",
+    "express": "^4.17.0",
+    "faker": "^4.1.0",
+    "jwt-decode": "^2.2.0",
+    "mongoose": "^5.5.10",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "performance-now": "^2.1.0",
+    "react-redux": "^7.0.3",
+    "redis": "^2.8.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.19.0"
+  }
+}
