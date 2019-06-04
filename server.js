@@ -92,8 +92,12 @@ app.use('*', (req, res) => res.send('Server is Working!'));
 io.on('connection', socket => {
     console.log(`client connected`);
     socket.on('processFile', data => {
-        console.log(data)
-        const fileProcess = spawn('node', ['--max-old-space-size=4096','/home/si180/Documents/LibraryManagementSystem/lib/addBooksFromFile.js', data]);
+        console.log(data);
+        const fileProcess = spawn('node', [
+            '--max-old-space-size=4096',
+            '/home/si180/Documents/LibraryManagementSystem/lib/addBooksFromFile.js',
+            data
+        ]);
 
         fileProcess.stdout.on('data', outputData => socket.emit('log', outputData));
         fileProcess.stderr.on('error', console.log);

@@ -1,0 +1,1 @@
+export CLASSPATH=/home/si180/Documents/Library/class/mysql-connector.jar

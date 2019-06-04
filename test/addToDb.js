@@ -1,10 +1,12 @@
+// process.env.UV_THREADPOOL_SIZE = 24;
+
 const fs = require('fs');
 const { Transform } = require('stream');
 
 const mongoose = require('mongoose');
 const bookModel = require('../model/book');
 
-const fileName = '/home/si180/Documents/LibraryManagementSystem/' + process.argv[2];
+const fileName = '/home/si180/Documents/Library/' + process.argv[2];
 const delimiter = ',';
 const maxNumberOfThreads = 24;
 const readChunkSize = 32 * 1024;
@@ -30,7 +32,8 @@ const splitChunk = new Transform({
     }
 });
 
-mongoose.connect('mongodb://localhost/libThirtyTwoThreadsSixtyFour', mongodbOptions);
+mongoose.connect('mongodb://localhost/check', mongodbOptions);
+// mongoose.connect('mongodb+srv://m220student:m220password@cluster0-fh58t.mongodb.net/Library', mongodbOptions);
 mongoose.connection.on('connected', () => {
     console.log('Connected to database successfully');
 
@@ -61,9 +64,10 @@ const parseLine = line => {
 
 const handleRedundantData = async redundantData => {
     try {
-        let book = await bookModel.findOne({ bookName: redundantData.bookName });
+        let book = await bookModel.findOne({ book: redundantData.book });
         book.count += redundantData.count;
         await book.save();
+        return;
     } catch (err) {
         throw err;
     }
