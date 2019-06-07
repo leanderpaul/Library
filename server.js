@@ -22,7 +22,7 @@ const storageOptions = multer.diskStorage({
 });
 const fileUpload = multer({ storage: storageOptions });
 const port = process.env.PORT || 8080;
-const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost/libraryManagement';
+const mongodbUri = process.env.MONGODB_URI || 'mongodb://localhost/check';
 const mongodbOptions = { useNewUrlParser: true, useCreateIndex: true };
 const bookModel = require('./model/book');
 
@@ -58,19 +58,21 @@ app.post('/library', async (req, res) => {
     let query = req.body;
     try {
         let countQuery = {},
-            queryObject = {},
-            searchQuery = new RegExp(query.searchQuery);
-        if (query.minCount != '') countQuery.$gte = query.minCount;
-        if (query.maxCount != '') countQuery.$lte = query.maxCount;
-        if (query.searchQuery !== '') queryObject[query.searchBy] = searchQuery;
+            searchAuthor = new RegExp(query.searchAuthor),
+            searchBookName = new RegExp(query.searchBookName),
+            // searchQuery = new RegExp(query.searchQuery),
+            queryObject = {};
+        if (query.minCount != '') countQuery.$gte = Number(query.minCount);
+        if (query.maxCount != '') countQuery.$lte = Number(query.maxCount);
+        // queryObject[query.searchBy] = searchQuery;
+        queryObject = { 'book.bookName': searchBookName, 'book.author': searchAuthor };
         if (Object.keys(countQuery).length > 0) queryObject.count = countQuery;
         let books = await bookModel
             .find(queryObject, '-_id -__v')
             .skip(query.skip)
             .limit(100)
-            .sort({ [query.sortBy]: query.sortOrder });
+            .sort({ ['book.' + query.sortBy]: query.sortOrder });
         let count = await bookModel.countDocuments(queryObject);
-        console.log(count);
         res.json({ books, success: true, count });
     } catch (err) {
         console.log(err);
@@ -80,7 +82,7 @@ app.post('/library', async (req, res) => {
 
 app.post('/deleteBook', async (req, res) => {
     try {
-        await bookModel.deleteOne({ bookName: req.body.bookName });
+        await bookModel.deleteOne({ 'book.bookName': req.body.bookName, 'book.author': req.body.author });
         res.json({ success: true });
     } catch (err) {
         res.json({ success: false, err });
@@ -93,17 +95,14 @@ io.on('connection', socket => {
     console.log(`client connected`);
     socket.on('processFile', data => {
         console.log(data);
-        const fileProcess = spawn('node', [
-            '--max-old-space-size=4096',
-            '/home/si180/Documents/LibraryManagementSystem/lib/addBooksFromFile.js',
-            data
-        ]);
+        const fileProcess = spawn('node', ['/home/si180/Documents/Library/lib/addBooksFromFile.js', data]);
 
         fileProcess.stdout.on('data', outputData => socket.emit('log', outputData));
         fileProcess.stderr.on('error', console.log);
-        fileProcess.on('exit', outputData => socket.emit('logEnd', outputData));
+        fileProcess.on('close', outputData => socket.emit('logEnd', outputData));
         signalEmitter.on(data, logData => console.log(logData));
     });
+    socket.on('disconnect', () => console.log('Client disconnected'));
 });
 
 server.listen(port, () => console.log(`Server listening to port ${port}`));

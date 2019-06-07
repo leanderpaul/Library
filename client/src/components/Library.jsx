@@ -28,8 +28,8 @@ class Library extends React.Component {
         totalCount: null,
         isOpenFilter: false,
         filter: {
-            searchBy: 'bookName',
-            searchQuery: '',
+            searchAuthor: '',
+            searchBookName: '',
             sortBy: 'bookName',
             minCount: '',
             maxCount: '',
@@ -67,6 +67,7 @@ class Library extends React.Component {
             filterChanged: true,
             filter: {
                 ...this.state.filter,
+                skip: 0,
                 [e.target.name]: e.target.value
             }
         });
@@ -79,6 +80,7 @@ class Library extends React.Component {
             filterChanged: true,
             filter: {
                 ...this.state.filter,
+                skip: 0,
                 [e]: temp.options[temp.selectedIndex].value
             }
         });
@@ -92,6 +94,7 @@ class Library extends React.Component {
                 filterChanged: true,
                 filter: {
                     ...this.state.filter,
+                    skip: 0,
                     [e.target.name]: e.target.value
                 }
             });
@@ -230,7 +233,7 @@ class Library extends React.Component {
                         <MDBRow className='my-5'>{resultList}</MDBRow>
                     </div>
                 )}
-                {books.length > 0 && loading === false && (
+                {books.length > 0 && loading === false && totalCount > books.length && (
                     <MDBRow>
                         <MDBCol className='text-center'>
                             <MDBBtn className='search-btn' onClick={this.handleFilterBooks}>
@@ -265,23 +268,21 @@ class Library extends React.Component {
                             </MDBCol>
                             <MDBCol size='12'>
                                 <MDBInput
-                                    label='Search'
+                                    label='Search by book name'
                                     icon='search'
-                                    value={this.state.filter.searchQuery}
-                                    name='searchQuery'
+                                    value={this.state.filter.searchBookName}
+                                    name='searchBookName'
                                     onChange={this.handleQueryChange}
                                 />
                             </MDBCol>
-                            <MDBCol size='12' className='text-center'>
-                                <select
-                                    onChange={() => this.handleSelectChange('searchBy')}
-                                    id='searchBy'
-                                    className='w-75'
-                                    value={this.state.filter.searchBy}
-                                >
-                                    <option value='bookName'>Search by Book Name</option>
-                                    <option value='author'>Search by Author</option>
-                                </select>
+                            <MDBCol size='12'>
+                                <MDBInput
+                                    label='Search by author'
+                                    icon='search'
+                                    value={this.state.filter.searchAuthor}
+                                    name='searchAuthor'
+                                    onChange={this.handleQueryChange}
+                                />
                             </MDBCol>
                         </MDBRow>
                         <MDBRow className='mt-3'>

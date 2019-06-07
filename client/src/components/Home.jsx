@@ -47,6 +47,7 @@ class Home extends React.Component {
             scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
         });
         io.on('logEnd', data => {
+            console.log(data);
             let logs = this.state.logs;
             let time = new Date();
             logs.push(<div>{'[ ' + date.format(time, 'DD MMM Y HH:mm:ss:SSS') + ' ] : Completed processing Data'}</div>);
@@ -54,6 +55,7 @@ class Home extends React.Component {
                 ...this.state,
                 logs
             });
+            io.disconnect();
         });
     };
 

@@ -8,10 +8,10 @@ const bookModel = require('../model/book');
 
 const fileName = '/home/si180/Documents/Library/' + process.argv[2];
 const delimiter = ',';
-const maxNumberOfThreads = 24;
-const readChunkSize = 32 * 1024;
+const maxNumberOfThreads = 32;
+const readChunkSize = 64 * 1024;
 const columns = ['bookName', 'author', 'count'];
-const mongodbOptions = { useNewUrlParser: true, useCreateIndex: true, poolSize: 24, bufferCommands: false };
+const mongodbOptions = { useNewUrlParser: true, useCreateIndex: true, poolSize: 32, bufferCommands: false, autoIndex: false };
 const fileReaderOptions = { highWaterMark: readChunkSize };
 const insertManyOptions = { ordered: false, rawResult: true };
 
@@ -25,10 +25,19 @@ const splitChunk = new Transform({
         let arrayOfLines = data.split('\n');
         lastData = arrayOfLines.pop();
         let books = arrayOfLines.map((line, index) => parseLine(line));
+        let updateDocs = books.map(book => {
+            return {
+                updateOne: {
+                    filter: { book: { bookName: book.bookName, author: book.author } },
+                    update: { $inc: { count: book.count } },
+                    upsert: true
+                }
+            };
+        });
         while (numberOfThreadsCurrently === maxNumberOfThreads) await new Promise(done => setTimeout(() => done(), 1));
         numberOfThreadsCurrently++;
         done();
-        insertBooksIntoDB(books);
+        insertBooksIntoDBTest(updateDocs);
     }
 });
 
@@ -95,6 +104,27 @@ const insertBooksIntoDB = async (books, repeated = 0) => {
             }
             return;
         }
+    }
+    numberOfThreadsCurrently--;
+    if (isReadComplete === true && numberOfThreadsCurrently === 0) mongoose.connection.close();
+};
+
+const insertBooksIntoDBTest = async (books, repeated = 0) => {
+    try {
+        let bulkWriteResult = await bookModel.bulkWrite(books, { ordered: false });
+        // console.log(bulkWriteResult);
+    } catch (err) {
+        if (err.name === 'MongoError' || err.name === 'MongoNetworkError') {
+            if (repeated < 3) {
+                console.log('MongoDB Connection. Retrying...');
+                insertBooksIntoDBTest(books, repeated++);
+            } else {
+                console.log('Tried 3 times the following books could not be inserted into the database');
+                console.log(books);
+            }
+            return;
+        } else if (err.name === 'CastError') console.log(err.message);
+        else console.log(err);
     }
     numberOfThreadsCurrently--;
     if (isReadComplete === true && numberOfThreadsCurrently === 0) mongoose.connection.close();

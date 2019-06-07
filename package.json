@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/leanderpaul/LibraryManagementSystem#readme",
   "dependencies": {
+    "date-and-time": "^0.7.0",
     "event-stream": "^4.0.1",
     "express": "^4.17.0",
     "faker": "^4.1.0",
