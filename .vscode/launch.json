@@ -8,8 +8,8 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Add to DB Program",
-            "program": "${workspaceFolder}/test/addToDb.js",
-            "args": ["data/hundredRecords.txt"]
+            "program": "${workspaceFolder}/lib/addBooksFromFile.js",
+            "args": ["data/hundredRecord.txt"]
         }
     ]
 }
