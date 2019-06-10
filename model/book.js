@@ -62,11 +62,10 @@ bookSchema
     });
 
 bookSchema.methods.toJSON = function() {
-    let bookRecord = {
-        bookName: this.bookName,
-        author: this.author,
-        count: this.count
-    };
+    let tempRecord = this._doc;
+    let book = this.book;
+    delete tempRecord.book;
+    let bookRecord = Object.assign(book, tempRecord);
     return bookRecord;
 };
 

@@ -4,12 +4,19 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "launch",
             "name": "Launch Add to DB Program",
             "program": "${workspaceFolder}/lib/addBooksFromFile.js",
             "args": ["data/hundredRecord.txt"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server",
+            "program": "${workspaceFolder}/server.js"
         }
     ]
 }

@@ -178,7 +178,7 @@ class Library extends React.Component {
         if (loaded === false) this.loadBooks();
         let modalList = Object.keys(modalData).map(objectKey => <div className='book-detail'>{objectKey + ': ' + modalData[objectKey]}</div>);
         let resultList;
-        if (books)
+        if (books && Array.isArray(books))
             resultList = books.map((result, index) => (
                 <MDBCol size='6' className='my-2' key={index}>
                     <MDBCard
@@ -319,8 +319,8 @@ class Library extends React.Component {
                                     className='w-100'
                                     value={this.state.filter.sortBy}
                                 >
-                                    <option value='bookName'>Book Name</option>
-                                    <option value='author'>Author</option>
+                                    <option value='book.bookName'>Book Name</option>
+                                    <option value='book.author'>Author</option>
                                     <option value='count'>Count</option>
                                 </select>
                             </MDBCol>

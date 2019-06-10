@@ -62,7 +62,7 @@ app.post('/', fileUpload.single('file'), async (req, res) => {
 // @body    { search: The search query string, searchBy: The key by which the serach should be conducted, skip: The number of books to skip }
 // @desc    Searching for the data from the database for the given query
 app.post('/search', async (req, res) => {
-    let searchQuery = new RegExp(req.body.search);
+    let searchQuery = new RegExp(req.body.search, 'i');
     let skip = req.body.skip,
         searchBy = req.body.searchBy;
     try {
@@ -90,10 +90,11 @@ app.post('/search', async (req, res) => {
 // @desc    Search the database for the books that match the query
 app.post('/library', async (req, res) => {
     let query = req.body;
+    console.log(query);
     try {
         let countQuery = {},
-            searchAuthor = new RegExp(query.searchAuthor),
-            searchBookName = new RegExp(query.searchBookName),
+            searchAuthor = new RegExp(query.searchAuthor,'i'),
+            searchBookName = new RegExp(query.searchBookName,'i'),
             // searchQuery = new RegExp(query.searchQuery),
             queryObject = {};
         if (query.minCount != '') countQuery.$gte = Number(query.minCount);
@@ -107,7 +108,7 @@ app.post('/library', async (req, res) => {
             .find(queryObject, '-_id -__v')
             .skip(query.skip)
             .limit(100)
-            .sort({ ['book.' + query.sortBy]: query.sortOrder });
+            .sort({ [query.sortBy]: query.sortOrder });
         // Getting the count of the number of documents that meet the search query
         let count = await bookModel.countDocuments(queryObject);
         res.json({ books, success: true, count });
